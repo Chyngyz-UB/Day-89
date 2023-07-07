@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Online Writing App</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Online Writing App</h1>
+    <textarea id="text" rows="10" cols="50"></textarea>
+    <br>
+    <button id="start-typing">Start Typing</button>
+    <br>
+    <button id="save-text">Save Text</button>
+    <br>
+    <div id="result"></div>
+
+    <script>
+        var timer;
+
+        function startTimer() {
+            $.ajax({
+                url: '/start-typing',
+                type: 'POST',
+                success: function(response) {
+                    console.log(response.message);
+                }
+            });
+        }
+
+        function saveText() {
+            var text = $('#text').val();
+
+            $.ajax({
+                url: '/save-text',
+                type: 'POST',
+                data: {
+                    text: text
+                },
+                success: function(response) {
+                    console.log(response.message);
+                }
+            });
+        }
+
+        function getText() {
+            $.ajax({
+                url: '/get-text',
+                type: 'GET',
+                success: function(response) {
+                    $('#result').text(response.text);
+                }
+            });
+        }
+
+        $('#start-typing').on('click', function() {
+            startTimer();
+        });
+
+        $('#save-text').on('click', function() {
+            saveText();
+        });
+
+        setInterval(getText, 1000);
+    </script>
+</body>
+</html>
